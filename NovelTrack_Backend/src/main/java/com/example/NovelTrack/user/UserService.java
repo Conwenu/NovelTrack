@@ -26,12 +26,16 @@ public class UserService {
 
     public User getUserByEmail(String email)
     {
-        return new User();
+        User temp = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User does not exist with the given email: " + email));;
+        return temp;
     }
 
     public User getUserByUserName(String username)
     {
-        return new User();
+        User temp = userRepository.findByEmail(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User does not exist with the given email: " + username));;
+        return temp;
     }
 
     public UserDTO createUser(UserDTO userDTO)
