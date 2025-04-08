@@ -1,13 +1,12 @@
 package com.example.NovelTrack.trackitem;
 
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class TrackItemRequest {
     private Long userId;
     private String bookId;
