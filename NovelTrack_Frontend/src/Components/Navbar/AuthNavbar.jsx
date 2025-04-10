@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "./AuthNavbar.css";
-import { NavbarMenu } from "../../mockData/data";
+
+// import { NavbarMenu } from "../../mockData/data.ts";
 import { CiSearch } from "react-icons/ci";
 import { FaBookBookmark } from "react-icons/fa6";
 import { MdMenu } from "react-icons/md";
@@ -9,6 +9,28 @@ import ResponsiveMenu from "./ResponsiveMenu";
 
 const AuthNavbar = () => {
   const [open, setOpen] = useState(false);
+  const NavbarMenu = [
+    {
+      id: 1,
+      title: "Home",
+      link: "/",
+    },
+    {
+      id: 2,
+      title: "Profile",
+      link: "profile/22",
+    },
+    {
+      id: 3,
+      title: "Tracking List",
+      link: "#",
+    },
+    {
+      id: 4,
+      title: "Browse",
+      link: "browse/",
+    },
+  ];
   return (
     <>
       <nav>
@@ -41,12 +63,12 @@ const AuthNavbar = () => {
               <CiSearch />
             </button>
 
-            <button className="text-xl hover:bg-primary text-primary font-semibold hover:text-white rounded-md border-2 border-primary px-6 py-2 duration-200 hidden md:block">
+            {/* <button className="text-xl hover:bg-primary text-primary font-semibold hover:text-white rounded-md border-2 border-primary px-6 py-2 duration-200 hidden md:block">
               LogIn
             </button>
             <button className="text-xl hover:bg-primary text-primary font-semibold hover:text-white rounded-md border-2 border-primary px-6 py-2 duration-200 hidden md:block">
               Register
-            </button>
+            </button> */}
           </div>
 
           <div
