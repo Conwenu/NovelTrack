@@ -17,6 +17,7 @@ export default [
         sourceType: 'module',
       },
     },
+    node : true,
     settings: { react: { version: '18.3' } },
     plugins: {
       react,

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",  // Make root directory the base
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "target": "ES6",  // You can adjust the target if needed
+    "module": "ESNext",  // Use ESNext modules
+    "esModuleInterop": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,  // Skip library type checking for better performance
+    "allowJs": true,  // Allow JS files to be included
+    "checkJs": false,  // Disable JS checking if you're not using TypeScript
+    "jsx": "react",  // Enable JSX support
+    "moduleResolution": "node"
+   
+  },
+  "include": [
+    "src/**/*"  // Include JS and JSX files in the 'src' folder
+  ]
+}
