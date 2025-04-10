@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --color-foreground: 21, 31, 46; 
+    --color-text: 159, 173, 189;   
+  }
+  
+
+  body, html {
+    margin: 0;
+    padding: 0;
+  }
+  

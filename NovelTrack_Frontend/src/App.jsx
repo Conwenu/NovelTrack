@@ -1,56 +1,23 @@
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./index.css";
-import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./Views/Home/Home";
 import Profile from "./Views/Profile/Profile";
-import BookPage from "./Views/Books/BookPage";
-import AuthNavbar from "./Components/Navbar/AuthNavbar";
+import BookSearch from "./Views/Browse/BookSearch";
+import BookDetails from "./Views/BookPage/BookDetails";
+import TestNavbar from "./Components/Navbar/NewNavbar";
+import Home from "./Views/Home/Home";
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
       <Router>
         <div className="App">
-          <AuthNavbar />
+          {/* <AuthNavbar /> */}
+          <TestNavbar/>
           <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  {" "}
-                  <div>
-                    <a href="https://vite.dev" target="_blank">
-                      <img src={viteLogo} className="logo" alt="Vite logo" />
-                    </a>
-                    <a href="https://react.dev" target="_blank">
-                      <img
-                        src={reactLogo}
-                        className="logo react"
-                        alt="React logo"
-                      />
-                    </a>
-                  </div>
-                  <h1>Novel Track</h1>
-                  <div className="card">
-                    <button onClick={() => setCount((count) => count + 1)}>
-                      count is {count}
-                    </button>
-                    <p>
-                      Edit <code>src/App.jsx</code> and save to test HMR
-                    </p>
-                  </div>
-                  <p className="read-the-docs">
-                    Click on the Vite and React logos to learn more
-                  </p>
-                </>
-              }
-            />
+            <Route path="/" element={<Home/>} />
             <Route path="/home" element={<Home />} />
             <Route path="/profile/:userId" element={<Profile />} />
-            <Route path="/book/:bookId" element={<BookPage />} />
+            <Route path="/books/:bookId" element={<BookDetails />} />
+            <Route path = "browse" element={<BookSearch/>}/>
           </Routes>
         </div>
       </Router>
