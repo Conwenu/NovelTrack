@@ -3,50 +3,60 @@ package com.example.NovelTrack.review;
 import com.example.NovelTrack.exception.InvalidPermissionsException;
 import com.example.NovelTrack.exception.ResourceNotFoundException;
 import com.example.NovelTrack.trackitem.TrackItem;
+import com.example.NovelTrack.trackitem.TrackItemDTO;
 import com.example.NovelTrack.user.User;
+import com.example.NovelTrack.user.UserMapper;
 import com.example.NovelTrack.user.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class ReviewService {
     private ReviewRepository reviewRepository;
     private UserRepository userRepository;
-    public List<Review> getAllReviews()
+    public List<ReviewDTO> getAllReviews()
     {
-        return reviewRepository.findAll();
+        List<Review> reviews =  reviewRepository.findAll();
+        return reviews.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public List<Review> getAllReviewsByUser(Long userId)
+    public List<ReviewDTO> getAllReviewsByUser(Long userId)
     {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
-        return reviewRepository.findAllByUser(user);
+        List<Review> reviews =  reviewRepository.findAllByUser(user);
+        return reviews.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public List<Review> getAllReviewsForBook(String bookId)
+    public List<ReviewDTO> getAllReviewsForBook(String bookId)
     {
-        return reviewRepository.findAllByBookId(bookId);
+        List<Review> reviews =  reviewRepository.findAllByBookId(bookId);
+        return reviews.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public Review getReview(Long id)
+    public ReviewDTO getReview(Long id)
     {
-        return reviewRepository.findById(id)
+        Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found with given id:" + id));
+        return this.toDTO(review);
     }
 
-    public List<Review> getAllReviewsForBookByUser(Long userId, String bookId)
+    public List<ReviewDTO> getAllReviewsForBookByUser(Long userId, String bookId)
     {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
-        return reviewRepository.findByUserAndBookId(user, bookId);
+        List<Review> reviews =  reviewRepository.findByUserAndBookId(user, bookId);
+        return reviews.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public Review createReview(Long userId, ReviewRequest reviewRequest)
+    public ReviewDTO createReview(Long userId, ReviewRequest reviewRequest)
     {
         Review review = new Review();
         User user = userRepository.findById(userId)
@@ -57,10 +67,23 @@ public class ReviewService {
         review.setBookImageUrl(reviewRequest.getBookImageUrl());
         review.setContent(reviewRequest.getContent());
         review.setLastChanged(LocalDateTime.now());
-        return reviewRepository.save(review);
+        return this.toDTO(reviewRepository.save(review));
     }
 
-    public Review editReview(Long userId, Long reviewId, ReviewRequest reviewRequest)
+    private ReviewDTO toDTO(Review review)
+    {
+        ReviewDTO reviewDTO = new ReviewDTO();
+        reviewDTO.setUser(UserMapper.mapToUserDTO(review.getUser()));
+        reviewDTO.setId(review.getId());
+        reviewDTO.setContent(review.getContent());
+        reviewDTO.setBookImageUrl(review.getBookImageUrl());
+        reviewDTO.setBookId(review.getBookId());
+        reviewDTO.setBookTitle(reviewDTO.getBookTitle());
+        reviewDTO.setLastChanged(review.getLastChanged());
+        return reviewDTO;
+    }
+
+    public ReviewDTO editReview(Long userId, Long reviewId, ReviewRequest reviewRequest)
     {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
@@ -72,7 +95,7 @@ public class ReviewService {
         }
         review.setContent(reviewRequest.getContent());
         review.setLastChanged(LocalDateTime.now());
-        return reviewRepository.save(review);
+        return this.toDTO(reviewRepository.save(review));
     }
 
     @Transactional

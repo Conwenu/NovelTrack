@@ -1,55 +1,66 @@
 package com.example.NovelTrack.review;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/review")
+@AllArgsConstructor
+@RequestMapping("api/reviews")
 public class ReviewController {
     private ReviewService reviewService;
     @GetMapping
-    public ResponseEntity<List<Review>> getAllReviews()
+    public ResponseEntity<List<ReviewDTO>> getAllReviews()
     {
-        List<Review> reviews = reviewService.getAllReviews();
+        List<ReviewDTO> reviews = reviewService.getAllReviews();
         return ResponseEntity.ok(reviews);
     }
 
     @GetMapping("user/{id}")
-    public  ResponseEntity<List<Review>> getAllReviewsByUser(@PathVariable("id") Long userId)
+    public  ResponseEntity<List<ReviewDTO>> getAllReviewsByUser(@PathVariable("id") Long userId)
     {
-        List<Review> reviews = reviewService.getAllReviewsByUser(userId);
+        List<ReviewDTO> reviews = reviewService.getAllReviewsByUser(userId);
         return ResponseEntity.ok(reviews);
     }
 
     @GetMapping("book/{id}")
-    public ResponseEntity<List<Review>> getAllReviewsForBook(@PathVariable("id") String bookId)
+    public ResponseEntity<List<ReviewDTO>> getAllReviewsForBook(@PathVariable("id") String bookId)
     {
-        List<Review> reviews = reviewService.getAllReviewsForBook(bookId);
+        List<ReviewDTO> reviews = reviewService.getAllReviewsForBook(bookId);
         return ResponseEntity.ok(reviews);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Review> getReview(@PathVariable("id") Long id)
+    // implement get user reviews for specific book
+    @GetMapping("/user/{userId}/book/{bookId}")
+    public  ResponseEntity<List<ReviewDTO>> getAllReviewsForBookByUser(@PathVariable("userId") Long userId,
+                                                 @PathVariable("bookId") String bookId)
     {
-        Review review = reviewService.getReview(id);
+        List<ReviewDTO> reviews = reviewService.getAllReviewsForBookByUser(userId, bookId);
+        return  ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ReviewDTO> getReview(@PathVariable("id") Long id)
+    {
+        ReviewDTO review = reviewService.getReview(id);
         return ResponseEntity.ok(review);
     }
 
     @PostMapping("{id}")
-    public ResponseEntity<Review> createReview(@PathVariable("id") Long userId, @RequestBody ReviewRequest reviewRequest)
+    public ResponseEntity<ReviewDTO> createReview(@PathVariable("id") Long userId, @RequestBody ReviewRequest reviewRequest)
     {
-        Review review = reviewService.createReview(userId, reviewRequest);
+        ReviewDTO review = reviewService.createReview(userId, reviewRequest);
         return ResponseEntity.ok(review);
     }
 
     @PutMapping("/user/{userId}/review/{reviewId}")
-    public  ResponseEntity<Review> editReview(@PathVariable("userId") Long userId,
+    public  ResponseEntity<ReviewDTO> editReview(@PathVariable("userId") Long userId,
                                               @PathVariable("reviewId") Long reviewId,
                                               @RequestBody ReviewRequest reviewRequest)
     {
-        Review review = reviewService.editReview(userId, reviewId, reviewRequest);
+        ReviewDTO review = reviewService.editReview(userId, reviewId, reviewRequest);
         return  ResponseEntity.ok(review);
     }
 

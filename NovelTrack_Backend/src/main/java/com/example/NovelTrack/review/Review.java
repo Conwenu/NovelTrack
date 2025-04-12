@@ -21,7 +21,7 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -37,6 +37,6 @@ public class Review {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "last_changed", nullable = false)
+    @Column(name = "last_changed")
     private LocalDateTime lastChanged;
 }

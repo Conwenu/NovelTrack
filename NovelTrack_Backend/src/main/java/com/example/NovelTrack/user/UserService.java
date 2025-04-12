@@ -41,6 +41,7 @@ public class UserService {
     public UserDTO createUser(UserDTO userDTO)
     {
         User user = UserMapper.mapToUser(userDTO);
+        // need to change the password to the actual password.
         User savedUser = userRepository.save(user);
         return UserMapper.mapToUserDTO(savedUser);
     }

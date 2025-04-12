@@ -14,49 +14,50 @@ public class TrackItemController {
     private TrackItemService trackItemService;
 
     @GetMapping
-    public ResponseEntity<List<TrackItem>> getAllTrackItems()
+    public ResponseEntity<List<TrackItemDTO>> getAllTrackItems()
     {
-        List<TrackItem> trackItems = trackItemService.getAllTrackItems();
+        List<TrackItemDTO> trackItems = trackItemService.getAllTrackItems();
         return ResponseEntity.ok(trackItems);
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<List<TrackItem>> getTrackItemById(@PathVariable("id") Long userId)
+    public ResponseEntity<List<TrackItemDTO>> getTrackItemById(@PathVariable("id") Long userId)
     {
-        List<TrackItem> trackItems = trackItemService.getByUserId(userId);
+        List<TrackItemDTO> trackItems = trackItemService.getByUserId(userId);
         return ResponseEntity.ok(trackItems);
     }
 
     @GetMapping("/user/{userId}/book/{bookId}")
-    public ResponseEntity<TrackItem> getSpecificTrackItem(@PathVariable("userId") Long userId,
+    public ResponseEntity<TrackItemDTO> getSpecificTrackItem(@PathVariable("userId") Long userId,
                                                           @PathVariable("bookId") String bookId) {
-        TrackItem trackItem = trackItemService.getSpecificTrackItem(userId, bookId);
+        TrackItemDTO trackItem = trackItemService.getSpecificTrackItemDTO(userId, bookId);
+        System.out.println(trackItem);
         return ResponseEntity.ok(trackItem);
     }
 
     @PostMapping("/user/{userId}")
-    public ResponseEntity<TrackItem> createTrackItem(@PathVariable("userId") Long userId,
+    public ResponseEntity<TrackItemDTO> createTrackItem(@PathVariable("userId") Long userId,
                                                      @RequestBody TrackItemRequest trackItemRequest) {
-        trackItemRequest.setUserId(userId);
-        TrackItem trackItem = trackItemService.createTrackItem(trackItemRequest);
+//        trackItemRequest.setUserId(userId);
+        TrackItemDTO trackItem = trackItemService.createTrackItem(userId, trackItemRequest);
         return ResponseEntity.ok(trackItem);
     }
 
     @PutMapping("/user/{userId}/book/{bookId}")
-    public ResponseEntity<TrackItem> editTrackItem(@PathVariable("userId") Long userId,
+    public ResponseEntity<TrackItemDTO> editTrackItem(@PathVariable("userId") Long userId,
                                                    @PathVariable("bookId") String bookId,
                                                    @RequestBody TrackItemRequest trackItemRequest) {
-        trackItemRequest.setUserId(userId);
-        TrackItem trackItem = trackItemService.editTrackItem(userId, trackItemRequest);
+//        trackItemRequest.setUserId(userId);
+        TrackItemDTO trackItem = trackItemService.editTrackItem(userId, trackItemRequest);
         return ResponseEntity.ok(trackItem);
     }
 
     @PutMapping("/user/{userId}/book/{bookId}/rate")
-    public ResponseEntity<TrackItem> rateBook(@PathVariable("userId") Long userId,
+    public ResponseEntity<TrackItemDTO> rateBook(@PathVariable("userId") Long userId,
                                               @PathVariable("bookId") String bookId,
                                               @RequestBody TrackItemRequest trackItemRequest) {
         trackItemRequest.setUserId(userId);
-        TrackItem trackItem = trackItemService.rateBook(userId, trackItemRequest);
+        TrackItemDTO trackItem = trackItemService.rateBook(userId, trackItemRequest);
         return ResponseEntity.ok(trackItem);
     }
 
