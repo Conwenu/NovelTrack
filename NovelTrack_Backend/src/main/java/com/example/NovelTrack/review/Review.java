@@ -14,14 +14,14 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "reviews")
+@Table(name = "review")
 public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -39,4 +39,10 @@ public class Review {
 
     @Column(name = "last_changed")
     private LocalDateTime lastChanged;
+
+    @PrePersist
+    public void prePersist() {
+        lastChanged = LocalDateTime.now();
+    }
+
 }

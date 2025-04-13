@@ -78,7 +78,7 @@ public class ReviewService {
         reviewDTO.setContent(review.getContent());
         reviewDTO.setBookImageUrl(review.getBookImageUrl());
         reviewDTO.setBookId(review.getBookId());
-        reviewDTO.setBookTitle(reviewDTO.getBookTitle());
+        reviewDTO.setBookTitle(review.getBookTitle());
         reviewDTO.setLastChanged(review.getLastChanged());
         return reviewDTO;
     }
