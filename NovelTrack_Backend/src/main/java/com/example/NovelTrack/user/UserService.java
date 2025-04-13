@@ -1,6 +1,9 @@
 package com.example.NovelTrack.user;
 
 import com.example.NovelTrack.exception.ResourceNotFoundException;
+import com.example.NovelTrack.review.Review;
+import com.example.NovelTrack.review.ReviewService;
+import com.example.NovelTrack.trackitem.TrackItemService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserService {
     private UserRepository userRepository;
+    private TrackItemService trackItemService;
+    private ReviewService reviewService;
     public List<UserDTO> getAllUsers()
     {
         List<User> users =  userRepository.findAll();
@@ -66,6 +71,8 @@ public class UserService {
         User user =  userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User does not exist with the given id: " + userId)
         );
+        trackItemService.deleteAllTrackItemsForUser(userId);
+        reviewService.deleteAllReviewsByUser(userId);
 
         userRepository.deleteById(userId);
 

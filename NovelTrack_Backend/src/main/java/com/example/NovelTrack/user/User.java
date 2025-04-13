@@ -14,7 +14,7 @@ import org.hibernate.annotations.NaturalId;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class User {
     private String email;
 
     @Column(name = "username", nullable = false, unique = true)
-    public String username;
+    private String username;
 
     @Column(name = "password", nullable = false)
     private String password;
