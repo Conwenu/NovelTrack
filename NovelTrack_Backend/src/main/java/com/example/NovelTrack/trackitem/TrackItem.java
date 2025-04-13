@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "track_items")
+@Table(name = "track_item")
 @Entity
 public class TrackItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -45,4 +45,10 @@ public class TrackItem {
     public enum Status {
         READING, COMPLETED, PLANNING
     }
+
+    @PrePersist
+    public void prePersist() {
+        lastChanged = LocalDateTime.now();
+    }
+
 }
