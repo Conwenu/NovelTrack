@@ -39,7 +39,24 @@ const BookDetails = () => {
           let bookDetails = {
             title: bookData.title || undefined,
             description: bookData.description?.value || undefined,
-            authors: bookData.authors && bookData.authors.length > 0 ? bookData.authors.map((author) => author.name).join(", ") : undefined,
+            //authors: bookData.authors && bookData.authors.length > 0 ? bookData.authors.map((author) => author.name).join(", ") : undefined,
+            authors: bookData.authors && bookData.authors.length > 0
+              ? (await Promise.all(
+                  bookData.authors.map(async (authorObj) => {
+                    const authorKey = authorObj.author?.key;
+                    if (authorKey) {
+                      try {
+                        const authorRes = await axios.get(`https://openlibrary.org${authorKey}.json`);
+                        return authorRes.data.name;
+                      } catch (err) {
+                        console.warn(`Failed to fetch author ${authorKey}`);
+                        return "Unknown Author";
+                      }
+                    }
+                    return "Unknown Author";
+                  })
+                )).join(", ")
+              : undefined,
             // coverImage: bookData.cover ? bookData.cover.large || bookData.cover.medium: undefined,
             coverImage: coverUrl
           };
