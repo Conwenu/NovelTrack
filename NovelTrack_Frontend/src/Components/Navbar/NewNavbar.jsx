@@ -63,6 +63,9 @@ const Navbar = () => {
           <a href="/browse" className="hover:text-gray-300">
             Browse
           </a>
+            <a href="/recommendation" className="hover:text-gray-300">
+            Recommendation
+            </a>
           <button
             onClick={toggleSearch}
             className="hover:text-gray-300 cursor-pointer"
