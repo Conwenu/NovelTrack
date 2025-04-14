@@ -30,6 +30,11 @@ const AuthNavbar = () => {
       title: "Browse",
       link: "browse/",
     },
+    {
+      id: 5,
+      title: "Recommendation",
+      link: "recommendation/",
+    },
   ];
   return (
     <>
