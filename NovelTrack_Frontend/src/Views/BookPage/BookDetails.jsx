@@ -100,6 +100,22 @@ const BookDetails = () => {
     fetchBookData();
   }, [bookId]);
 
+useEffect(() => {
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/reviews/book/${bookId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch reviews");
+      }
+      const data = await response.json();
+      setReviews(data);
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+    }
+  };
+
+  fetchReviews();
+}, [bookId]);
 
 
   const handleAddToList = (status) => {
@@ -140,7 +156,14 @@ const BookDetails = () => {
         </div>
       </div>
 
-      <ReviewSection reviews={reviews} onAddReview={() => setShowAddReviewModal(true)} />
+      <ReviewSection
+        reviews={reviews}
+        onAddReview={handleAddReview}
+        bookId={bookId}
+        bookTitle={book?.title}
+        bookImageUrl={book?.coverImage}
+      />
+
 
       {showAddToListModal && <AddToListModal onClose={() => setShowAddToListModal(false)} onAdd={handleAddToList} />}
       {showAddReviewModal && (
