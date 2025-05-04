@@ -1,6 +1,7 @@
-// David
+// Shayan, David
 import React, { useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import axios from "axios";
 
 import ChatHistory from "../ChatHistory";
 import Loading from "../Loading";
@@ -85,11 +86,27 @@ const Recommendation = () => {
   const [userInput, setUserInput] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [likedTitles, setLikedTitles] = useState([]);
+
+  const userData = localStorage.getItem("user");
+  const user = JSON.parse(userData);
 
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  const fetchLikedTitles = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/track-item/user/${user.id}/liked-titles`);
+      setLikedTitles(response.data);
+    } catch (error) {
+      console.error("Error fetching liked book titles:", error);
+      alert("Failed to load liked book titles.");
+    }
+  };
+
+  
 
   const handleUserInput = (e) => {
     setUserInput(e.target.value);
@@ -120,24 +137,39 @@ const Recommendation = () => {
     setChatHistory([]);
   };
 
-  const handleAutoRecommend = () => {
-    const topRated = [...mockBookData]
-      .filter((item) => item.status === "Completed" && item.score)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3);
+  // const handleAutoRecommend = () => {
+  //   const topRated = [...mockBookData]
+  //     .filter((item) => item.status === "Completed" && item.score)
+  //     .sort((a, b) => b.score - a.score)
+  //     .slice(0, 3);
+      
 
-    if (topRated.length === 0) {
-      alert("No completed books found with a score.");
+  //   if (topRated.length === 0) {
+  //     alert("No completed books found with a score.");
+  //     return;
+  //   }
+    
+  //   const autoPrompt = `Based on the following completed books with high scores: ${topRated
+  //     .map((book) => `${book.title} (Score: ${book.score})`)
+  //     .join(", ")}\nRecommend more books that are similar in genre and tone.`;
+
+  //   sendMessage(autoPrompt);
+  // };
+
+  // uses the users liked books
+  const handleAutoRecommend = async () => {
+    await fetchLikedTitles();
+  
+    if (likedTitles.length === 0) {
+      alert("No liked books found.");
       return;
     }
-
-    
-    const autoPrompt = `Based on the following completed books with high scores: ${topRated
-      .map((book) => `${book.title} (Score: ${book.score})`)
-      .join(", ")}\nRecommend more books that are similar in genre and tone.`;
-
+  
+    const autoPrompt = `Based on these books that I liked: ${likedTitles.join(", ")}, can you recommend more books similar in genre or vibe?`;
+  
     sendMessage(autoPrompt);
   };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 flex flex-col items-center px-4 py-8">
