@@ -1,6 +1,14 @@
 // David
-const AddToListModal = ({ onClose, onAdd }) => {
-  const statuses = ["Reading", "Planning To", "Already Read"]
+const AddToListModal = ({ onClose, onAdd, book, rating, userId }) => {
+  const statuses = ["READING", "PLANNING TO", "ALREADY READ"];
+
+
+
+    const handleAdd = (status) => {
+      onAdd(status);  // delegate to BookDetails
+    };
+
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -9,7 +17,7 @@ const AddToListModal = ({ onClose, onAdd }) => {
         {statuses.map((status) => (
           <button
             key={status}
-            onClick={() => onAdd(status)}
+            onClick={() => handleAdd(status)}
             className="block w-full text-left px-4 py-2 hover:bg-gray-100 rounded-md mb-2"
           >
             {status}
@@ -23,8 +31,6 @@ const AddToListModal = ({ onClose, onAdd }) => {
         </button>
       </div>
     </div>
-  )
-}
-
-export default AddToListModal
-
+  );
+};
+export default AddToListModal;
