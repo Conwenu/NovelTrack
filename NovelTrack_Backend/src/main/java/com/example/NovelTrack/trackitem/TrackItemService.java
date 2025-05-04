@@ -8,6 +8,7 @@ import com.example.NovelTrack.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,6 +57,10 @@ public class TrackItemService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
         TrackItem existingTrackItem = getSpecificTrackItem(userId, trackItemRequest.getBookId());
+
+        /*Optional<TrackItem> existing = trackItemRepository.findByUserAndBookId(user, trackItemRequest.getBookId());
+
+        if (existing.isPresent()) {*/
 
         if (existingTrackItem != null && trackItemRepository.existsById(existingTrackItem.getId())) {
             return this.editTrackItem(userId, trackItemRequest);
