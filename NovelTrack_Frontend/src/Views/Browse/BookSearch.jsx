@@ -39,7 +39,8 @@ const BookSearch = () => {
       setLoading(true);
       setError(null);
       const response = await axios.get(`https://openlibrary.org/search.json?q=${term}`);
-      setBooks(response.data.docs);
+      const booksWithCovers = response.data.docs.filter((book) => book.cover_i);
+      setBooks(booksWithCovers);
       console.log(response.data)
       setCurrentPage(1) 
     } catch (err) {
