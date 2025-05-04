@@ -11,7 +11,7 @@ const ReviewSection = ({ reviews, bookId, bookTitle, bookImageUrl, onAddReview }
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: 1, 
+          userId: 1,
           bookId,
           bookTitle,
           bookImageUrl,
@@ -36,7 +36,7 @@ const ReviewSection = ({ reviews, bookId, bookTitle, bookImageUrl, onAddReview }
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-4">Reviews</h2>
 
-        
+
         {reviews.length === 0 ? (
           <p>No reviews yet. Be the first to review this book!</p>
         ) : (
@@ -47,7 +47,7 @@ const ReviewSection = ({ reviews, bookId, bookTitle, bookImageUrl, onAddReview }
           ))
         )}
 
-        
+
         <button
           onClick={() => setIsModalOpen(true)}
           className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300 mt-4"
@@ -55,11 +55,11 @@ const ReviewSection = ({ reviews, bookId, bookTitle, bookImageUrl, onAddReview }
           Add a Review
         </button>
 
-        
+
         {isModalOpen && (
           <AddReviewModal
             onClose={() => setIsModalOpen(false)}
-            onAddReview={handleAddReview}  
+            onAddReview={handleAddReview}
           />
         )}
       </div>
@@ -67,3 +67,4 @@ const ReviewSection = ({ reviews, bookId, bookTitle, bookImageUrl, onAddReview }
   };
 
 export default ReviewSection;
+
