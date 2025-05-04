@@ -52,6 +52,11 @@ public class ReviewController {
     @PostMapping
     public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewRequest reviewRequest) {
         ReviewDTO review = reviewService.createReview(reviewRequest);
+
+        // Long userId = reviewRequest.getUserId();
+
+        // ReviewDTO review = reviewService.createReview(userId, reviewRequest);
+        
         return ResponseEntity.ok(review);
     }
 
