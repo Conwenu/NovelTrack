@@ -1,10 +1,11 @@
-// Shayan, David
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import axios from "axios";
 
 import ChatHistory from "../ChatHistory";
 import Loading from "../Loading";
+
+
 
 // Mock Book Data
 const mockBookData = [
@@ -82,31 +83,32 @@ const mockBookData = [
   },
 ];
 
+
+
 const Recommendation = () => {
+
+    const [userBooks, setUserBooks] = useState([]);
+
+      useEffect(() => {
+        const fetchBooks = async () => {
+          try {
+            const response = await axios.get("http://localhost:8080/api/track-item/user/1"); // adjust as needed
+            setUserBooks(response.data);
+          } catch (err) {
+            console.error("Failed to fetch user books:", err);
+          }
+        };
+
+        fetchBooks();
+      }, []);
   const [userInput, setUserInput] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [likedTitles, setLikedTitles] = useState([]);
 
-  const userData = localStorage.getItem("user");
-  const user = JSON.parse(userData);
-
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-
+  const apiKey = "your_key"; // Replace this with your key
   const genAI = new GoogleGenerativeAI(apiKey);
+
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-  const fetchLikedTitles = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8080/api/track-item/user/${user.id}/liked-titles`);
-      setLikedTitles(response.data);
-    } catch (error) {
-      console.error("Error fetching liked book titles:", error);
-      alert("Failed to load liked book titles.");
-    }
-  };
-
-  
 
   const handleUserInput = (e) => {
     setUserInput(e.target.value);
@@ -137,39 +139,25 @@ const Recommendation = () => {
     setChatHistory([]);
   };
 
-  // const handleAutoRecommend = () => {
-  //   const topRated = [...mockBookData]
-  //     .filter((item) => item.status === "Completed" && item.score)
-  //     .sort((a, b) => b.score - a.score)
-  //     .slice(0, 3);
-      
+  const handleAutoRecommend = () => {
+    const topRated = [...userBooks]
+      .filter((item) => item.status === "READING" && item.rating != null)
+      .sort((a, b) => b.rating - a.rating)
+      .slice(0, 5);
 
-  //   if (topRated.length === 0) {
-  //     alert("No completed books found with a score.");
-  //     return;
-  //   }
-    
-  //   const autoPrompt = `Based on the following completed books with high scores: ${topRated
-  //     .map((book) => `${book.title} (Score: ${book.score})`)
-  //     .join(", ")}\nRecommend more books that are similar in genre and tone.`;
-
-  //   sendMessage(autoPrompt);
-  // };
-
-  // uses the users liked books
-  const handleAutoRecommend = async () => {
-    await fetchLikedTitles();
-  
-    if (likedTitles.length === 0) {
-      alert("No liked books found.");
+    if (topRated.length === 0) {
+      alert("No reading books found with a rating.");
       return;
     }
-  
-    const autoPrompt = `Based on these books that I liked: ${likedTitles.join(", ")}, can you recommend more books similar in genre or vibe?`;
-  
+
+    const autoPrompt = `Based on the following highly rated books you're reading: ${topRated
+      .map((book) => `${book.bookTitle} (Rating: ${book.rating})`)
+      .join(", ")}\nRecommend more books that are similar in genre and tone.`;
+
     sendMessage(autoPrompt);
   };
-  
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 flex flex-col items-center px-4 py-8">
