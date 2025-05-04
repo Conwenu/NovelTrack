@@ -79,4 +79,39 @@ public class UserService {
     }
 
 
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+//    public User findByUsername(String username) {
+//        return userRepository.findByUsername(username);
+//    }
+//
+//    public User findByEmail(String email) {
+//        return userRepository.findByEmail(email);
+//    }
+
+    public User findByUsernameOrEmail(String usernameOrEmail) {
+        return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+    }
+
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+//    public UserDTO convertToDTO(User user) {
+//        UserDTO userDTO = new UserDTO();
+//        userDTO.setId(user.getId());
+//        userDTO.setUsername(user.getUsername());
+//        userDTO.setEmail(user.getEmail());
+//        userDTO.setDescription(user.getDescription());
+//        return userDTO;
+//    }
+
+
 }

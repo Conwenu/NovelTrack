@@ -61,9 +61,9 @@ public class ReviewControllerUnitTests {
         request.setBookTitle("Some Title");
         request.setContent("Test review");
 
-        when(reviewService.createReview(1L, request)).thenReturn(reviewDTO);
+        when(reviewService.createReview(request)).thenReturn(reviewDTO);
 
-        ResponseEntity<ReviewDTO> response = reviewController.createReview(1L, request);
+        ResponseEntity<ReviewDTO> response = reviewController.createReview(request);
         assertEquals(200, response.getStatusCodeValue());
         assertEquals("OL123", response.getBody().getBookId());
     }
