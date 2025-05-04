@@ -16,9 +16,10 @@ const BookDetails = () => {
   const [reviews, setReviews] = useState([]);
   const [book, setBook] = useState(null); 
   const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
+  const [isInReadingList, setIsInReadingList] = useState(false);
   console.log("bookId", bookId)
-  
+
   useEffect(() => {
     const fetchBookData = async () => {
       try {
@@ -102,6 +103,26 @@ const BookDetails = () => {
   }, [bookId]);
 
 useEffect(() => {
+  const fetchTrackingData = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/track-item/user/1/book/${bookId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setIsInReadingList(true);
+        if (data.rating) {
+          setRating(data.rating);
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching tracking data:", err);
+    }
+  };
+
+  fetchTrackingData();
+}, [bookId]);
+
+
+useEffect(() => {
   const fetchReviews = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/reviews/book/${bookId}`);
@@ -119,10 +140,41 @@ useEffect(() => {
 }, [bookId]);
 
 
-  const handleAddToList = (status) => {
-    console.log(`Added to list with status: ${status}`);
-    setShowAddToListModal(false);
+  const handleAddToList = async (status) => {
+    if (!book) return;
+
+    const trackingData = {
+      userId: 1,  // Replace with dynamic user ID if available
+      bookId: bookId,
+      bookTitle: book.title,
+      bookImageUrl: book.coverImage,
+      status: status,
+      rating: rating
+    };
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/track-item/user/${trackingData.userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(trackingData)
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save book to tracking list");
+      }
+
+      console.log("Book successfully added to tracking list");
+    } catch (error) {
+      console.error("Error adding book to tracking list:", error);
+    } finally {
+      setShowAddToListModal(false);
+    }
   };
+
+
+
 
   const handleAddReview = (review) => {
     setReviews([...reviews, review]);
@@ -146,9 +198,14 @@ useEffect(() => {
           <p className="text-gray-700 mb-6">{book.description}</p>
           <button
             onClick={() => setShowAddToListModal(true)}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+            className={`px-4 py-2 rounded-md transition duration-300 ${
+              isInReadingList
+                ? "bg-gray-400 text-white cursor-not-allowed"
+                : "bg-blue-500 text-white hover:bg-blue-600"
+            }`}
+            disabled={isInReadingList}
           >
-            Add to Reading List
+            {isInReadingList ? "Already in Reading List" : "Add to Reading List"}
           </button>
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-2">Rate this book:</h3>
@@ -166,7 +223,14 @@ useEffect(() => {
       />
 
 
-      {showAddToListModal && <AddToListModal onClose={() => setShowAddToListModal(false)} onAdd={handleAddToList} />}
+      {showAddToListModal && (
+        <AddToListModal
+          onClose={() => setShowAddToListModal(false)}
+          onAdd={(status) => handleAddToList(status)}
+          book={book} // optionally pass book as a prop if AddToListModal needs it
+        />
+      )}
+
       {showAddReviewModal && (
         <AddReviewModal onClose={() => setShowAddReviewModal(false)} onAddReview={handleAddReview} />
       )}
