@@ -19,7 +19,7 @@ const AddReviewModal = ({ onClose, onAddReview }) => {
           <textarea
             value={review}
             onChange={(e) => setReview(e.target.value)}
-            className="w-full h-32 p-2 border border-gray-300 rounded-md mb-4"
+            className="w-full h-32 p-3 border border-gray-300 rounded-md mb-4"
             placeholder="Write your review here..."
           ></textarea>
           <div className="flex justify-end gap-4">
@@ -40,6 +40,7 @@ const AddReviewModal = ({ onClose, onAddReview }) => {
         </form>
       </div>
     </div>
+
   );
 };
 
