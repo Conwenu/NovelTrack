@@ -125,5 +125,23 @@ public class TrackItemService {
         trackItemRepository.deleteByUser(user);  // Deleting by User
     }
 
+    public List<TrackItemDTO> getLikedBooks(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+        List<TrackItem> likedItems = trackItemRepository
+                .findByUserAndRatingGreaterThanEqualOrderByRatingDesc(user, 4);
+
+        return likedItems.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getLikedBookTitles(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+        return trackItemRepository.findLikedBookTitlesByUser(user);
+    }
+
 
 }

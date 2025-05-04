@@ -28,9 +28,6 @@ public class TrackItemDTO {
 
     private LocalDateTime lastChanged;
 
-    public enum Status {
-        READING, COMPLETED, PLANNING
-    }
 }
 
 

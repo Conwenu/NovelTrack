@@ -3,10 +3,14 @@ package com.example.NovelTrack.user;
 import com.example.NovelTrack.exception.ResourceNotFoundException;
 import com.example.NovelTrack.review.Review;
 import com.example.NovelTrack.review.ReviewService;
+import com.example.NovelTrack.trackitem.TrackItem;
+import com.example.NovelTrack.trackitem.TrackItemDTO;
 import com.example.NovelTrack.trackitem.TrackItemService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,6 +81,53 @@ public class UserService {
         userRepository.deleteById(userId);
 
     }
+
+//    public HashMap<TrackItem.Status, Integer> getUserStats2(Long userId)
+//    {
+//        HashMap<TrackItem.Status, Integer> stats = new HashMap<>();
+//        stats.put("READING", 0);
+//        stats.put("COMPLETED", 0);
+//        stats.put("PLANNING", 0);
+//        User user =  userRepository.findById(userId).orElseThrow(
+//                () -> new ResourceNotFoundException("User does not exist with the given id: " + userId)
+//        );
+//
+//        Map<TrackItemDTO.Status, Integer> stats = new EnumMap<>(TrackItemDTO.Status.class);
+//        for (TrackItemDTO.Status status : TrackItemDTO.Status.values()) {
+//            stats.put(status, 0);
+//        }
+//
+//        // Fetch all items and count statuses
+//        List<TrackItemDTO> items = trackItemService.getByUserId(userId);
+//        for (TrackItemDTO item : items) {
+//            stats.put(item.getStatus(), stats.get(item.getStatus()) + 1);
+//        }
+//
+//        return stats;
+//    }
+
+    public Map<TrackItem.Status, Integer> getUserStats(Long userId) {
+        // Optional: validate user existence
+        if (!userRepository.existsById(userId)) {
+            throw new ResourceNotFoundException("User does not exist with the given id: " + userId);
+        }
+
+        // Initialize counters with 0
+        Map<TrackItem.Status, Integer> stats = new EnumMap<>(TrackItem.Status.class);
+        for (TrackItem.Status status : TrackItem.Status.values()) {
+            stats.put(status, 0);
+        }
+
+        // Fetch all items and count statuses
+        List<TrackItemDTO> items = trackItemService.getByUserId(userId);
+        for (TrackItemDTO item : items) {
+            stats.put(item.getStatus(), stats.get(item.getStatus()) + 1);
+        }
+
+        return stats;
+    }
+
+
 
 
 

@@ -35,6 +35,17 @@ public class TrackItemController {
         return ResponseEntity.ok(trackItem);
     }
 
+    @GetMapping("/user/{userId}/liked-track-items")
+    public ResponseEntity<List<TrackItemDTO>> getLikedTrackItems(@PathVariable Long userId) {
+        List<TrackItemDTO> titles = trackItemService.getLikedBooks(userId);
+        return ResponseEntity.ok(titles);
+    }
+    @GetMapping("/user/{userId}/liked-titles")
+    public ResponseEntity<List<String>> getLikedBookTitles(@PathVariable Long userId) {
+        List<String> titles = trackItemService.getLikedBookTitles(userId);
+        return ResponseEntity.ok(titles);
+    }
+
     @PostMapping("/user/{userId}")
     public ResponseEntity<TrackItemDTO> createTrackItem(@PathVariable("userId") Long userId,
                                                      @RequestBody TrackItemRequest trackItemRequest) {

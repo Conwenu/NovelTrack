@@ -1,12 +1,16 @@
 package com.example.NovelTrack.user;
 
+import com.example.NovelTrack.trackitem.TrackItem;
+import com.example.NovelTrack.trackitem.TrackItemDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/users")
@@ -27,6 +31,14 @@ public class UserController {
         return ResponseEntity.ok(userDTO);
 
     }
+
+    @GetMapping("/{id}/stats")
+    public Map<TrackItem.Status, Integer> getUserStats(@PathVariable("id") Long id)
+    {
+        Map<TrackItem.Status, Integer> stats = userService.getUserStats(id);
+        return ResponseEntity.ok(stats).getBody();
+    }
+
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO)
     {
