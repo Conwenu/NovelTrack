@@ -54,6 +54,11 @@ public class ReviewService {
     public ReviewDTO createReview(ReviewRequest reviewRequest) {
         Review review = new Review();
 
+        /*public ReviewDTO createReview(Long userId, ReviewRequest reviewRequest) {
+
+        Review review = new Review();
+
+        User user = userRepository.findById(userId)*/
         
         User user = userRepository.findById(reviewRequest.getUserId())
                 .orElseGet(() -> createDefaultUser());
