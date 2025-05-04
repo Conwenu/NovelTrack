@@ -1,8 +1,9 @@
+// David
 import { useState } from "react"
 import Sidebar from "../Components/SideBar"
 import BookList from "../Components/BookList"
 import SearchBar from "../Components/SearchBar"
-
+import { useSearchParams } from 'react-router-dom';
 // fake data for book list
 const mockBookData = [
   {

@@ -1,3 +1,4 @@
+// David
 export const dummyBooks = [
     { id: 1, title: "The Great Gatsby", image: "https://i0.wp.com/americanwritersmuseum.org/wp-content/uploads/2018/02/CK-3.jpg?resize=267%2C400&ssl=1" },
     { id: 2, title: "Moby Dick", image: "/placeholder.svg?height=200&width=150" },

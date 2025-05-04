@@ -1,5 +1,6 @@
+// David
 import React from "react";
-
+import { useSearchParams } from 'react-router-dom';
 const ReviewComponent = ({username, text, index}) => {
   return (
     <div key={index} className="bg-card p-4 rounded-md shadow-sm">

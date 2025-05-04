@@ -1,7 +1,11 @@
+// David
 import React from "react";
 import { BarChart2 } from 'lucide-react';
 import ReviewComponent from "./ReviewComponent";
+import { useSearchParams } from 'react-router-dom';
 const RecentReviews = () => {
+  const [searchParams] = useSearchParams();
+  const userId = searchParams.get('userId');
   const reviews = [
     {text : "Just finished watching Attack on Titan Season 4!"},
     {text : "Started reading Chainsaw Man manga. So good!"},

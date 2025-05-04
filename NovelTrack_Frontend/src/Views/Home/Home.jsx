@@ -1,3 +1,4 @@
+// David
 import { FaBook, FaPencilAlt, FaLightbulb } from "react-icons/fa"
 
 const Home = () => {
@@ -11,12 +12,7 @@ const Home = () => {
           <p className="text-xl text-indigo-800 mb-8">
             Track, review, and discover your next favorite read with NovelTrack
           </p>
-          <a
-            href="#"
-            className="bg-indigo-600 text-white px-8 py-3 rounded-full text-lg hover:bg-indigo-700 transition duration-300"
-          >
-            Get Started
-          </a>
+
         </section>
 
         <section id="features" className="grid md:grid-cols-3 gap-8 mb-16">
@@ -43,7 +39,7 @@ const Home = () => {
             Connect with fellow book lovers, share your literary journey, and explore new worlds through reading.
           </p>
           <a
-            href="#"
+            href="/register"
             className="bg-indigo-600 text-white px-8 py-3 rounded-full text-lg hover:bg-indigo-700 transition duration-300"
           >
             Sign Up Now

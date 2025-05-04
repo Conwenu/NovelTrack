@@ -1,6 +1,10 @@
+// David
 import React from "react";
+import { useSearchParams } from 'react-router-dom';
 
 const ProfileStats = () => {
+    const [searchParams] = useSearchParams();
+    const userId = searchParams.get('userId');
   return (
     <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
       <div className="bg-card p-4 rounded-md shadow-sm">

@@ -1,3 +1,4 @@
+// David
 export default function BookCard({ book }) {
   const progressPercentage = (book.progress / book.episodes) * 100;
 

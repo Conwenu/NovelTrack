@@ -1,3 +1,4 @@
+// David
 const StarRating = ({ rating, onRate }) => {
   return (
     <div className="flex">

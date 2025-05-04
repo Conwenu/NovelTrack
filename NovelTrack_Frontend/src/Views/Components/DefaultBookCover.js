@@ -1,3 +1,4 @@
+// David
 const getDefaultCover = (title, author) => {
     console.log(title, author)
     const color1 = getRandomColor();

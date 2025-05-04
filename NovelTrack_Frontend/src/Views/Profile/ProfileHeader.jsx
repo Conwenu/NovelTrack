@@ -1,6 +1,9 @@
+// David
 import React from 'react'
+import { useParams } from 'react-router-dom';
 
 const ProfileHeader = () => {
+     const { userId } = useParams();
   return (
     <div className="relative h-64 w-full">
         <img
