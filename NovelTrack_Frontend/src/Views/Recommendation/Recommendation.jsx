@@ -122,7 +122,7 @@ const Recommendation = () => {
   const [chatHistory, setChatHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const apiKey = "AIzaSyDrHMr1ucghcSiWk-qOpiDy5fQSm-xIFe4"; // this will be changed later.....
+  const apiKey = ""; // this will be changed later.....
   const genAI = new GoogleGenerativeAI(apiKey);
 
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
