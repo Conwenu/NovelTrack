@@ -1,18 +1,25 @@
-// David
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BarChart2 } from 'lucide-react';
 import ReviewComponent from "./ReviewComponent";
-import { useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+
 const RecentReviews = () => {
-  const [searchParams] = useSearchParams();
-  const userId = searchParams.get('userId');
-  const reviews = [
-    {text : "Just finished watching Attack on Titan Season 4!"},
-    {text : "Started reading Chainsaw Man manga. So good!"},
-    {text : "Added 5 new books to my watchlist for the upcoming season. "},
-    {text : "FMA is so overrated 💔💔💔 "}
-  ]
-  const username = "BookReader99"
+  const {userId} = useParams();
+  const [reviews, setReviews] = useState([]);
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/reviews/user/${userId}`);
+        const data = await response.json();
+        setReviews(data);
+      } catch (error) {
+        console.error("Failed to fetch reviews:", error);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
   return (
     <div className="mt-8 mb-8">
       <div className="flex items-center mb-4">
@@ -23,8 +30,16 @@ const RecentReviews = () => {
       </div>
 
       <div className="space-y-4">
-        {reviews.map((item, index) => (
-          <ReviewComponent username={username} text={item.text} index = {index}/>
+        {reviews.map((review, index) => (
+            <ReviewComponent
+              key={review.id}
+              username={review.user.username}
+              text={review.content}
+              index={index}
+              bookId={review.bookId}
+              review={review}
+              flag={true}
+            />
         ))}
       </div>
     </div>

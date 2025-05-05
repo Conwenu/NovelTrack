@@ -59,9 +59,9 @@ public class ReviewService {
         Review review = new Review();
 
         User user = userRepository.findById(userId)*/
-        
+
         User user = userRepository.findById(reviewRequest.getUserId())
-                .orElseGet(() -> createDefaultUser());
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + reviewRequest.getUserId()));
 
         review.setUser(user);
         review.setBookId(reviewRequest.getBookId());

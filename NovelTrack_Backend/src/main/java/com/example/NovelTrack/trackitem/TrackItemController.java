@@ -49,6 +49,7 @@ public class TrackItemController {
     @PostMapping("/user/{userId}")
     public ResponseEntity<TrackItemDTO> createTrackItem(@PathVariable("userId") Long userId,
                                                      @RequestBody TrackItemRequest trackItemRequest) {
+        System.out.println("????");
 //        trackItemRequest.setUserId(userId);
         TrackItemDTO trackItem = trackItemService.createTrackItem(userId, trackItemRequest);
         return ResponseEntity.ok(trackItem);
@@ -67,7 +68,7 @@ public class TrackItemController {
     public ResponseEntity<TrackItemDTO> rateBook(@PathVariable("userId") Long userId,
                                               @PathVariable("bookId") String bookId,
                                               @RequestBody TrackItemRequest trackItemRequest) {
-        trackItemRequest.setUserId(userId);
+        //trackItemRequest.setUserId(userId);
         TrackItemDTO trackItem = trackItemService.rateBook(userId, trackItemRequest);
         return ResponseEntity.ok(trackItem);
     }

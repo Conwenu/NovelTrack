@@ -18,8 +18,10 @@ const BookDetails = () => {
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null);
   const [isInReadingList, setIsInReadingList] = useState(false);
+  const [trackData, setTrackData] = useState(null);
   console.log("bookId", bookId)
-
+  const userData = localStorage.getItem("user");
+  const user = JSON.parse(userData);
   useEffect(() => {
     const fetchBookData = async () => {
       try {
@@ -62,7 +64,7 @@ const BookDetails = () => {
             // coverImage: bookData.cover ? bookData.cover.large || bookData.cover.medium: undefined,
             coverImage: coverUrl
           };
-          console.log(bookData.cover)
+          
 
           
           if (!bookDetails.title || !bookDetails.description || !bookDetails.authors || !bookDetails.coverImage) {
@@ -105,10 +107,11 @@ const BookDetails = () => {
 useEffect(() => {
   const fetchTrackingData = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/track-item/user/1/book/${bookId}`);
+      const response = await fetch(`http://localhost:8080/api/track-item/user/${user.id}/book/${bookId}`);
       if (response.ok) {
         const data = await response.json();
         setIsInReadingList(true);
+        setTrackData(data);
         if (data.rating) {
           setRating(data.rating);
         }
@@ -130,6 +133,7 @@ useEffect(() => {
         throw new Error("Failed to fetch reviews");
       }
       const data = await response.json();
+      console.log("rev", data);
       setReviews(data);
     } catch (err) {
       console.error("Error fetching reviews:", err);
@@ -142,9 +146,9 @@ useEffect(() => {
 
   const handleAddToList = async (status) => {
     if (!book) return;
-
+    console.log(bookId, book.title)
     const trackingData = {
-      userId: 1,  // Replace with dynamic user ID if available
+      userId: user.id, 
       bookId: bookId,
       bookTitle: book.title,
       bookImageUrl: book.coverImage,
@@ -200,16 +204,16 @@ useEffect(() => {
             onClick={() => setShowAddToListModal(true)}
             className={`px-4 py-2 rounded-md transition duration-300 ${
               isInReadingList
-                ? "bg-gray-400 text-white cursor-not-allowed"
+                ? "bg-gray-400 text-white"
                 : "bg-blue-500 text-white hover:bg-blue-600"
             }`}
-            disabled={isInReadingList}
+            disabled={false}
           >
             {isInReadingList ? "Already in Reading List" : "Add to Reading List"}
           </button>
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-2">Rate this book:</h3>
-            <StarRating rating={rating} onRate={setRating} />
+            <StarRating rating={rating} onRate={setRating} bookId={bookId} bookTitle={book.title} bookImageUrl={book.coverImage || ""} />
           </div>
         </div>
       </div>
@@ -227,7 +231,8 @@ useEffect(() => {
         <AddToListModal
           onClose={() => setShowAddToListModal(false)}
           onAdd={(status) => handleAddToList(status)}
-          book={book} // optionally pass book as a prop if AddToListModal needs it
+          book={book} 
+          currStatus={(trackData && trackData.status) || ""}
         />
       )}
 

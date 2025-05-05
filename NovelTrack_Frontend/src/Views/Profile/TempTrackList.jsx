@@ -3,32 +3,38 @@ import { useState, useEffect } from "react";
 import Sidebar from "../Components/SideBar";
 import BookList from "../Components/BookList";
 import SearchBar from "../Components/SearchBar";
-
+import { useParams } from "react-router-dom";
+import { getDefaultCover } from "../Components/DefaultBookCover";
 export default function BookTrackingPage() {
   const [books, setBooks] = useState([]);
   const [filter, setFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const userData = localStorage.getItem("user");
+  const user = JSON.parse(userData);
+  const {userId} = useParams();
+
   useEffect(() => {
     const fetchTrackingList = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/track-item/user/1");
+        const response = await fetch(`http://localhost:8080/api/track-item/user/${userId}`);
         if (!response.ok) throw new Error("Failed to fetch tracking list");
         const data = await response.json();
-
+        console.log("Ti", data)
         const transformed = data
-          .filter(item => item.bookTitle && item.bookImageUrl && item.status)
+          .filter(item => item.bookTitle  && item.status)
           .map(item => ({
+            trackId: item.id,
             id: item.bookId,
             title: item.bookTitle,
-            image: item.bookImageUrl,
+            image: item.bookImageUrl || getDefaultCover(item.bookTitle),
             score: item.rating,
             progress: item.pagesRead ?? 0,
             pages: item.totalPages ?? 0,
             status: item.status.charAt(0) + item.status.slice(1).toLowerCase(), // "READING" -> "Reading"
           }));
-
+          console.log(transformed)
         setBooks(transformed);
       } catch (error) {
         console.error("Error loading tracking list:", error);

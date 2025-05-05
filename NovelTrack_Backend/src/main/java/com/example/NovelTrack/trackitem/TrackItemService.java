@@ -56,13 +56,9 @@ public class TrackItemService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
-        TrackItem existingTrackItem = getSpecificTrackItem(userId, trackItemRequest.getBookId());
+        Optional<TrackItem> existing = trackItemRepository.findByUserAndBookId(user, trackItemRequest.getBookId());
 
-        /*Optional<TrackItem> existing = trackItemRepository.findByUserAndBookId(user, trackItemRequest.getBookId());
-
-        if (existing.isPresent()) {*/
-
-        if (existingTrackItem != null && trackItemRepository.existsById(existingTrackItem.getId())) {
+        if (existing.isPresent()) {
             return this.editTrackItem(userId, trackItemRequest);
         }
 
@@ -79,6 +75,7 @@ public class TrackItemService {
     }
 
 
+
     private TrackItemDTO toDTO(TrackItem trackItem) {
         TrackItemDTO trackItemDTO = new TrackItemDTO();
         trackItemDTO.setUser(UserMapper.mapToUserDTO(trackItem.getUser()));
@@ -92,28 +89,66 @@ public class TrackItemService {
         return trackItemDTO;
     }
 
-    public TrackItemDTO editTrackItem(Long userId, TrackItemRequest trackItemRequest)
-    {
-        TrackItem trackItem = this.getSpecificTrackItem(userId, trackItemRequest.getBookId());
-        trackItem.setStatus(trackItemRequest.getStatus());
-        if (trackItemRequest.getRating() != null)
-        {
-            trackItem.setRating(trackItemRequest.getRating());
-        }
-        trackItem.setLastChanged(LocalDateTime.now());
-        return this.toDTO(trackItem);
-    }
+    public TrackItemDTO editTrackItem(Long userId, TrackItemRequest trackItemRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
-    public TrackItemDTO rateBook(Long userId, TrackItemRequest trackItemRequest)
-    {
-        TrackItem trackItem = this.getSpecificTrackItem(userId, trackItemRequest.getBookId());
-        if (trackItemRequest.getRating() != null)
-        {
+        TrackItem trackItem = trackItemRepository
+                .findByUserAndBookId(user, trackItemRequest.getBookId())
+                .orElseGet(() -> {
+                    TrackItem newItem = new TrackItem();
+                    newItem.setUser(user);
+                    newItem.setBookId(trackItemRequest.getBookId());
+                    newItem.setBookTitle(trackItemRequest.getBookTitle());
+                    newItem.setBookImageUrl(trackItemRequest.getBookImageUrl());
+                    return newItem;
+                });
+
+        trackItem.setStatus(trackItemRequest.getStatus());
+        if (trackItemRequest.getRating() != null) {
             trackItem.setRating(trackItemRequest.getRating());
         }
         trackItem.setLastChanged(LocalDateTime.now());
+
         return this.toDTO(trackItemRepository.save(trackItem));
     }
+
+
+//    public TrackItemDTO rateBook(Long userId, TrackItemRequest trackItemRequest)
+//    {
+//        TrackItem trackItem = this.getSpecificTrackItem(userId, trackItemRequest.getBookId());
+//        if (trackItemRequest.getRating() != null)
+//        {
+//            trackItem.setRating(trackItemRequest.getRating());
+//        }
+//        trackItem.setLastChanged(LocalDateTime.now());
+//        return this.toDTO(trackItemRepository.save(trackItem));
+//    }
+
+    public TrackItemDTO rateBook(Long userId, TrackItemRequest trackItemRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+        TrackItem trackItem = trackItemRepository
+                .findByUserAndBookId(user, trackItemRequest.getBookId())
+                .orElseGet(() -> {
+                    TrackItem newItem = new TrackItem();
+                    newItem.setUser(user);
+                    newItem.setBookId(trackItemRequest.getBookId());
+                    newItem.setBookTitle(trackItemRequest.getBookTitle());
+                    newItem.setBookImageUrl(trackItemRequest.getBookImageUrl());
+                    newItem.setStatus(TrackItem.Status.PLANNING); // default status
+                    return newItem;
+                });
+
+        if (trackItemRequest.getRating() != null) {
+            trackItem.setRating(trackItemRequest.getRating());
+        }
+        trackItem.setLastChanged(LocalDateTime.now());
+
+        return this.toDTO(trackItemRepository.save(trackItem));
+    }
+
 
     @Transactional
     public void deleteTrackItem(Long id)
